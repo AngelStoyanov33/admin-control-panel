@@ -115,3 +115,7 @@ dist
 
 # Misc
 .DS_Store
+
+# Configs
+config.js
+*.env
