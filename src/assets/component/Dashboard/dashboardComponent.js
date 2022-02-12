@@ -1,5 +1,7 @@
 import "../../../App.css";
 import React, { Component } from "react";
+import Sidebar from "../Sidebar/sideBarComponent";
+import { Route } from "react-router-dom";
 
 class Dashboard extends Component {
   constructor(props) {
@@ -8,7 +10,17 @@ class Dashboard extends Component {
 
   render() {
     console.log(this.state);
-    return <h3>tewf34t43</h3>;
+    const test = (
+      <div class="container">
+        <h2 style={{ color: "red" }}>Test</h2>
+      </div>
+    );
+    return (
+      <React.Fragment>
+        <Sidebar content={test} />
+        <Route path="/dashboard/test" />
+      </React.Fragment>
+    );
   }
 }
 

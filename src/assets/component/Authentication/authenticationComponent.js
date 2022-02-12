@@ -8,7 +8,7 @@ import { animations } from "react-animation";
 class Authetication extends Component {
   render() {
     return (
-      <div>
+      <header className="App-header">
         <div className="inner" style={{ animation: animations.popIn }}>
           <img src={logo} className="App-logo" alt="logo" />
           <h3 style={{ animation: animations.bounceIn }}>
@@ -23,7 +23,7 @@ class Authetication extends Component {
             }
           ></MicrosoftLoginButton>
         </div>
-      </div>
+      </header>
     );
   }
 }
