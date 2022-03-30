@@ -21,10 +21,29 @@ import { darkTheme, lightTheme } from "../Dashboard/dashboardThemes";
 
 const drawerWidth = 240;
 
+export const dashboardBoxStyle = {
+  background: "linear-gradient(to right,#242526,#3a3b3c)",
+  borderColor: "text.primary",
+  m: 1,
+  border: 0,
+  width: "100wh",
+  display: "flex",
+  alignItems: "stretch",
+  flexWrap: "wrap",
+  justifyContent: "center",
+  flexGrow: "1",
+  flexBasis: "auto",
+  minHeight: "auto",
+};
+
 export default function Sidebar({ content }) {
   return (
     <ThemeProvider theme={darkTheme}>
-      <Box sx={{ display: "flex" }}>
+      <Box
+        sx={{
+          display: "flex",
+        }}
+      >
         <CssBaseline />
         <AppBar
           position="fixed"
@@ -33,7 +52,7 @@ export default function Sidebar({ content }) {
             ml: `${drawerWidth}px`,
           }}
         >
-          <Toolbar>{/* Navbar*/}</Toolbar>
+          <Toolbar></Toolbar>
         </AppBar>
         <Drawer
           sx={{
@@ -47,7 +66,6 @@ export default function Sidebar({ content }) {
           variant="permanent"
           anchor="left"
         >
-          <Toolbar />
           <Divider />
           <List>
             {sidebarData.map((item, index) => {
@@ -65,10 +83,15 @@ export default function Sidebar({ content }) {
         </Drawer>
         <Box
           component="main"
-          sx={{ flexGrow: 1, bgcolor: "background.default", p: 3 }}
+          sx={{
+            flexGrow: 1,
+            p: 3,
+          }}
         >
           <Toolbar />
-          {content}
+          <Box sx={{ ...dashboardBoxStyle, borderRadius: "16px" }}>
+            {content}
+          </Box>
         </Box>
       </Box>
     </ThemeProvider>
