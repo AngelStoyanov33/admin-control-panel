@@ -1,7 +1,7 @@
 import "../../../App.css";
 import React, { Component } from "react";
 import Sidebar from "../Sidebar/sideBarComponent";
-import { Route } from "react-router-dom";
+import Typography from "@mui/material/Typography";
 
 class Dashboard extends Component {
   constructor(props) {
@@ -9,16 +9,18 @@ class Dashboard extends Component {
   }
 
   render() {
-    console.log(this.state);
-    const test = (
-      <div class="container">
-        <h2 style={{ color: "red" }}>Test</h2>
-      </div>
+    const content = (
+      <React.Fragment>
+        <div>
+          <Typography sx={{ fontSize: 28 }} color="text.secondary" gutterBottom>
+            Welcome to the Sporton Developer Dashboard
+          </Typography>
+        </div>
+      </React.Fragment>
     );
     return (
       <React.Fragment>
-        <Sidebar content={test} />
-        <Route path="/dashboard/test" />
+        <Sidebar content={content} />
       </React.Fragment>
     );
   }
