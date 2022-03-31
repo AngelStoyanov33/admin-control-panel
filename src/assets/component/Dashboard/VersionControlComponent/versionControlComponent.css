@@ -1,0 +1,8 @@
+.gitcard {
+  min-width: 2 75;
+  background-color: transparent;
+  flex: 0 0 300px;
+  margin: 2px;
+  display: inline-block;
+  transform: scale(0.95);
+}
