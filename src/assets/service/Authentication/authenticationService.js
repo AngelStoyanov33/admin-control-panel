@@ -1,73 +1,99 @@
 import React, { Component } from "react";
-import { config } from "../../../config";
-import { PublicClientApplication } from "@azure/msal-browser";
+import { AuthContext } from "./authContext";
 
-class Authenticator extends Component {
-  state = {};
+import { msalApp, isIE, AUTH_SCOPES } from "./authUtils";
 
-  constructor(props) {
-    super(props);
-    this.state = {};
+const useRedirectFlow = isIE();
 
-    const initialState = {
-      error: null,
-      isAuthenticated: false,
-      user: {},
-    };
+export default (C) =>
+  class Authenticator extends Component {
+    state = {};
 
-    this.state = JSON.parse(sessionStorage.getItem("state"))
-      ? JSON.parse(sessionStorage.getItem("state"))
-      : initialState;
+    constructor(props) {
+      super(props);
+      this.state = {};
 
-    this.login = this.login.bind(this);
-
-    const config_ = {
-      auth: {
-        clientId: config.appId,
-        redirectUri: config.redirectUri,
-        authority: config.authority,
-      },
-      cache: {
-        cacheLocation: "sessionStorage",
-        storeAuthStateInCookie: true,
-      },
-    };
-
-    this.publicClientApplication = new PublicClientApplication(config_);
-  }
-  async login(callback) {
-    try {
-      const user = await this.publicClientApplication.loginPopup({
-        scopes: config.scopes,
-        prompt: "select_account",
-      });
-
-      this.state.isAuthenticated = true;
-      this.state.user = user;
-
-      sessionStorage.setItem("state", JSON.stringify(this.state));
-
-      callback();
-    } catch (error) {
-      this.state({
-        error: error,
+      const initialState = {
+        error: null,
         isAuthenticated: false,
-        user: {},
-      });
+        account: null,
+      };
+
+      this.state = JSON.parse(sessionStorage.getItem("state"))
+        ? JSON.parse(sessionStorage.getItem("state"))
+        : initialState;
     }
-  }
 
-  logout() {
-    this.publicClientApplication.logoutPopup();
-  }
+    async onSignIn(redirect) {
+      if (redirect) {
+        let returnVal = await msalApp.loginRedirect({
+          scopes: [AUTH_SCOPES.OPENID, AUTH_SCOPES.PROFILE],
+          extraQueryParameters: {
+            ui_locales: localStorage.getItem("language") ?? "sv",
+          },
+        });
+        return returnVal;
+      }
 
-  isAuthenticated() {
-    return this.state.isAuthenticated;
-  }
+      const loginResponse = await msalApp.loginRedirect({
+        scopes: [AUTH_SCOPES.OPENID, AUTH_SCOPES.PROFILE],
+        extraQueryParameters: {
+          ui_locales: localStorage.getItem("language") ?? "sv",
+        },
+      });
 
-  getUser() {
-    return this.isAuthenticated() ? this.state.user : null;
-  }
-}
+      if (loginResponse) {
+        this.setState({
+          account: loginResponse.account,
+          isAuthenticated: true,
+          error: null,
+        });
+      }
+    }
 
-export default new Authenticator();
+    onSignOut() {
+      msalApp.logout();
+    }
+
+    async componentDidMount() {
+      msalApp.handleRedirectCallback((error) => {
+        if (error) {
+          const errorMessage = error.errorMessage
+            ? error.errorMessage
+            : "Unable to acquire access token.";
+          this.setState({
+            error: errorMessage,
+          });
+        }
+      });
+
+      const account = msalApp.getAccount();
+      this.setState({
+        account,
+      });
+
+      const now = Math.round(new Date().getTime() / 1000);
+
+      if (account && account.idToken.exp > now) {
+        this.setState({
+          isAuthenticated: true,
+        });
+      }
+    }
+
+    render() {
+      const authContext = {
+        isAuthenticated: this.state.isAuthenticated,
+        account: this.state.account,
+        error: this.state.error,
+        onSignIn: () => this.onSignIn(useRedirectFlow),
+        onSignOut: () => this.onSignOut(),
+      };
+
+      return (
+        <AuthContext.Provider value={authContext}>
+          <C {...this.props} />
+        </AuthContext.Provider>
+      );
+    }
+  };
