@@ -1,8 +1,9 @@
 import "../../../../App.css";
 import "./osmComponent.css";
-import React, { Component, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import Sidebar from "../../Sidebar/sideBarComponent";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import * as L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
@@ -10,15 +11,62 @@ import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import dashboardBoxStyle from "../../Sidebar/sideBarComponent.js";
 import Box from "@mui/material/Box";
+import { AuthContext } from "../../../service/Authentication/authContext";
+import axios from "axios";
 
 const position = [42.6977, 23.3219];
+const defaultDistance = 6000; //in meters
+
+const api = axios.create({
+  baseURL: process.env.REACT_APP_APIGW_URL,
+});
 
 function OSMComponent() {
   const [map, setMap] = useState(null);
   const [coords, setCoords] = useState({});
-  const [age, setAge] = React.useState("");
+  const [sportType, setSportType] = useState("");
+
   const handleChange = (event) => {
-    setAge(event.target.value);
+    setSportType(event.target.value);
+    console.log(localStorage.getItem("AD-IdToken"));
+    api
+      .get(
+        "/pitch/locate?latitude=" +
+          position[0] +
+          "&longitude=" +
+          position[1] +
+          "&radius=" +
+          defaultDistance +
+          "&type=" +
+          event.target.value,
+        {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("AD-IdToken"),
+          },
+        }
+      )
+      .catch(function (error) {
+        console.log(error.toJSON());
+      })
+      .then((response) => {
+        console.log(response.data);
+        for (let i = 0; i < response.data.length; i++) {
+          map.leafletElement.addLayer(
+            L.marker(
+              [
+                response.data[i].location.coordinates[0],
+                response.data[i].location.coordinates[1],
+              ],
+              {
+                color: "red",
+                fillColor: "red",
+                fillOpacity: 0.5,
+                radius: 1,
+              }
+            )
+          );
+        }
+      });
   };
 
   useEffect(() => {
@@ -63,15 +111,15 @@ function OSMComponent() {
             <Select
               labelId="demo-simple-select-filled-label"
               id="demo-simple-select-filled"
-              value={age}
+              value={sportType}
               onChange={handleChange}
             >
               <MenuItem value="">
                 <em>None</em>
               </MenuItem>
-              <MenuItem value={"soccer"}>Football</MenuItem>
-              <MenuItem value={"tennis"}>Tennis</MenuItem>
-              <MenuItem value={"basketball"}>Basketball</MenuItem>
+              <MenuItem value={"FOOTBALL"}>Football</MenuItem>
+              <MenuItem value={"TENNIS"}>Tennis</MenuItem>
+              <MenuItem value={"BASKETBALL"}>Basketball</MenuItem>
             </Select>
           </FormControl>
         </div>
@@ -86,4 +134,5 @@ function OSMComponent() {
   );
 }
 
+OSMComponent.contextType = AuthContext;
 export default OSMComponent;
