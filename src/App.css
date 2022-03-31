@@ -11,6 +11,8 @@
 }
 
 .App-logo {
+  max-width: 50%;
+  height: auto;
 }
 
 @media (prefers-reduced-motion: no-preference) {
