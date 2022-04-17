@@ -1,0 +1,62 @@
+{
+  "name": "sporton-admin-control-panel",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@azure/msal-browser": "^2.21.0",
+    "@emotion/react": "^11.7.1",
+    "@emotion/styled": "^11.6.0",
+    "@mui/core": "^5.0.0-alpha.54",
+    "@mui/icons-material": "^5.4.1",
+    "@mui/lab": "^5.0.0-alpha.68",
+    "@mui/material": "^5.4.1",
+    "@mui/styles": "^5.4.1",
+    "@testing-library/jest-dom": "^5.16.2",
+    "@testing-library/react": "^12.1.2",
+    "@testing-library/user-event": "^13.5.0",
+    "autoprefixer": "^10.4.2",
+    "axios": "^0.26.1",
+    "leaflet": "^1.7.1",
+    "msal": "^1.4.16",
+    "postcss": "^8.4.6",
+    "react": "^17.0.2",
+    "react-animation": "^1.2.2",
+    "react-bootstrap": "^2.1.2",
+    "react-container-dimensions": "^1.4.1",
+    "react-dom": "^17.0.2",
+    "react-icons": "^4.3.1",
+    "react-is": "^17.0.2",
+    "react-leaflet": "^3.2.5",
+    "react-repo-card": "^1.2.0",
+    "react-router-dom": "4.3.1",
+    "react-scripts": "5.0.0",
+    "react-social-login-buttons": "^3.6.0",
+    "styled-components": "^5.3.3",
+    "tailwindcss": "^3.0.19",
+    "web-vitals": "^2.1.4"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}

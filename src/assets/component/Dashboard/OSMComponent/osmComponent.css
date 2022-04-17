@@ -1,0 +1,16 @@
+@import "~leaflet/dist/leaflet.css";
+
+.leaflet-container {
+  min-height: 450px;
+  position: relative;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  flex-grow: 1;
+  display: flex;
+  align-self: stretch;
+  align-items: stretch;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: column;
+  flex-direction: column;
+}
